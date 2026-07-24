@@ -1,0 +1,2 @@
+# Kartice
+Laravel prvi projekat
