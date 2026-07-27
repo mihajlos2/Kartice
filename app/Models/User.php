@@ -29,4 +29,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function pack()
+    {
+        return $this->hasMany(Pack::class);
+    }
 }

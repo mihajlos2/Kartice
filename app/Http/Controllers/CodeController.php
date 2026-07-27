@@ -4,21 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Code;
 use App\Models\Pack;
+use App\Notifications\CodeSender;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class CodeController extends Controller
 {
-
-
-
     /**
      * Display a listing of the resource.
      */
     public function index(Pack $pack)
     {
-        $codes = Code::query()
-            ->where('pack_id', $pack->id)
-            ->get();
+        Gate::authorize('view', $pack);
+        $codes = $pack->code;
 
         return view('show_code', [
             'codes' => $codes,
@@ -31,6 +30,7 @@ class CodeController extends Controller
      */
     public function create(Pack $pack)
     {
+        Gate::authorize('view', $pack);
         return view('create_code',[
             'pack' => $pack,
         ]);
@@ -67,7 +67,7 @@ class CodeController extends Controller
             ]);
 
 
-        Code::create([
+        $codes = Code::create([
             'name' => $validated['recipient_name'],
             'email' => $validated['recipient_email'],
             'amount' => $validated['amount'],
@@ -77,6 +77,8 @@ class CodeController extends Controller
             'hashcode' => hash('sha256', $CCode),
             'pack_id' => $validated['pack_id']
         ]);
+
+        Auth::user()->notify(new CodeSender($codes));
 
         return redirect()
             ->route('create.code',['pack' => $validated['pack_id']])
@@ -96,6 +98,7 @@ class CodeController extends Controller
      */
     public function edit(Pack $pack, Code $code)
     {
+        Gate::authorize('view', $code);
         if ($code->pack_id !== $pack->id) {
             abort(404);
         }
@@ -134,13 +137,15 @@ class CodeController extends Controller
             'recipient_type' => ['required', 'string', 'in:specific,bulk'],
         ]);
 
-        $code->update([
+         $code->update([
             'name' => $validated['recipient_name'],
             'email' => $validated['recipient_email'],
             'amount' => $validated['amount'],
             'date' => $sdate,
             'recipient_type' => $validated['recipient_type'],
         ]);
+
+
 
         return redirect()
             ->route('show.code', ['pack' => $pack])

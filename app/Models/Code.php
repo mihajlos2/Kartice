@@ -32,8 +32,5 @@ class Code extends Model
         return $code;
     }
 
-    public function hashcode()
-    {
-        return Hash::make($this->code());
-    }
+
 }

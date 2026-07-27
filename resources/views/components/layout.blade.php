@@ -62,6 +62,18 @@
             color: #1c1c1a;
             background-color: white;
         }
+        .auth-button {
+            width: 100%;
+            padding: 11px 16px;
+            border: 0;
+            border-radius: 7px;
+            background-color: #1c1c1a;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
 
         main {
             padding: 40px;
@@ -73,14 +85,27 @@
 
 <nav>
     <a href="/">Home</a>
-    <a href="{{ route('packs.create') }}">Create Pack</a>
-    <a href="{{ route('packs.index') }}">Show Packs</a>
+    @auth
+        <a href="{{ route('packs.create') }}">Create Pack</a>
+        <a href="{{ route('packs.index') }}">Show Packs</a>
+        <div class="registe">
+            <form action="/logout" method="POST">
+                @csrf
+                @method('DELETE')
+                <button class="auth-button" type="submit">
+                    Log out
+                </button>
+            </form>
+        </div>
+    @endauth
 
+    @guest
+        <div class="registe">
+            <a href="/login"  >Log in</a>
+            <a href="/register"  >Register</a>
+        </div>
+    @endguest
 
-    <div class="registe">
-        <a href="login"  >Log in</a>
-        <a href="register"  >Register</a>
-    </div>
 </nav>
 
 <main>

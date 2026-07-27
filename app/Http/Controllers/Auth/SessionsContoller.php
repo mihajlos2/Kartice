@@ -26,7 +26,7 @@ class SessionsContoller extends Controller
         }else
         {
             return back()->withErrors([
-                'error' => 'Los unis emaila ili sifre',
+                'email' => 'Los unis emaila ili sifre'
             ]);
         }
     }

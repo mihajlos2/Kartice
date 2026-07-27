@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Pack;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class PackController extends Controller
 {
@@ -12,7 +14,7 @@ class PackController extends Controller
      */
     public function index()
     {
-        $packs = Pack::all();
+        $packs = Auth::user()->pack;
 
         return view('show_pack', [
             'packs' => $packs,
@@ -24,6 +26,7 @@ class PackController extends Controller
      */
     public function create()
     {
+
         return view('create_pack');
     }
 
@@ -33,11 +36,14 @@ class PackController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255','unique:packs,name'],
-            'date'=> ['date']
+            'name' => ['required', 'string', 'max:255'],
+            'date'=> ['date'],
         ]);
 
-        $pack = Pack::create($validated);
+        $pack = Auth::user()->pack()->create([
+            'name' => $request->name,
+            'date' => $request->date,
+        ]);
 
         return redirect()
             ->route('create.code',['pack' => $pack]);
