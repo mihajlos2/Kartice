@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class CodeSender extends Notification implements ShouldQueue
+class CodeSenderUser extends Notification
 {
     use Queueable;
 
@@ -35,12 +35,9 @@ class CodeSender extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = url('/packs/'.$this->code->pack_id . '/codes?');
-
         return (new MailMessage)
-            ->line('Napravio si kod: '. $this->code->name)
-            ->line('Salje se: '. $this->code->date)
-            ->action('Pogledaj kod', $url )
+            ->line('Cestitam dobili ste kod')
+            ->line('KOd je:'.'')
             ->line('Thank you for using our application!');
     }
 

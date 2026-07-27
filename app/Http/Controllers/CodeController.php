@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Code;
 use App\Models\Pack;
 use App\Notifications\CodeSender;
+use App\Notifications\CodeSenderUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Notification;
 
 class CodeController extends Controller
 {
@@ -79,6 +81,12 @@ class CodeController extends Controller
         ]);
 
         Auth::user()->notify(new CodeSender($codes));
+
+        if($request['send_options'] === 'instant')
+        {
+            Notification::route('mail', $codes->email)
+                ->notify(new CodeSenderUser($codes));
+        }
 
         return redirect()
             ->route('create.code',['pack' => $validated['pack_id']])
