@@ -26,7 +26,7 @@ class StoreCodeRequest extends FormRequest
             'recipient_name' => ['required', 'string', 'max:255'],
             'recipient_email' => ['required', 'string','email', 'max:255'],
             'amount' => ['required', 'integer', 'max:255'],
-            'recipient_type' => ['required', 'string', 'max:10'],
+            'recipient_type' => ['required', 'string', 'in:specific,bulk'],
             'pack_id' => ['required', 'integer', 'exists:packs,id']
         ]);
     }

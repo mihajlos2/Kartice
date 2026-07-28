@@ -26,7 +26,7 @@ class SessionsContoller extends Controller
         }else
         {
             return back()->withErrors([
-                'email' => 'Los unis emaila ili sifre'
+                'email' => __('messages.bad_credentials'),
             ]);
         }
     }

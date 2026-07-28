@@ -10,7 +10,7 @@ class SendOptionsCheck
         return match ($sendOption) {
             'send_at' => $sendAt,
             'instant' => now()->addMinutes(5),
-            'no date' => 'no send',
+            'no date' => 'no send'
         };
     }
 }

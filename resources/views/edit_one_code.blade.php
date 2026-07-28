@@ -27,41 +27,26 @@
         @csrf
         @method('PUT')
 
-        <div>
+        <div style="margin-bottom: 15px">
             <label for="recipient_type">
                 Recipient Type
             </label>
 
-            <p>
-                <select
-                    id="recipient_type"
-                    name="recipient_type"
-                >
+            <select id="recipient_type" name="recipient_type">
+                @foreach (\App\Enums\RecipientType::cases() as $recipientType)
                     <option
-                        value="specific"
+                        value="{{ $recipientType->value }}"
                         @selected(
                             old(
                                 'recipient_type',
-                                $code->recipient_type
-                            ) === 'specific'
+                                $code->recipient_type->value
+                            ) === $recipientType->value
                         )
                     >
-                        Specify Recipient
+                        {{ $recipientType->label() }}
                     </option>
-
-                    <option
-                        value="bulk"
-                        @selected(
-                            old(
-                                'recipient_type',
-                                $code->recipient_type
-                            ) === 'bulk'
-                        )
-                    >
-                        Bulk Store Credit Code
-                    </option>
-                </select>
-            </p>
+                @endforeach
+            </select>
 
             <x-error name="recipient_type"/>
         </div>
@@ -153,7 +138,7 @@
                     </option>
 
                     <option
-                        value="{{"no date"}}"
+                        value="{{'no date'}}"
                     >
                         No date
                     </option>

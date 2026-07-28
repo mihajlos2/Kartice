@@ -80,6 +80,6 @@ class PackController extends Controller
 
         return redirect()
             ->route('packs.index')
-            ->with('success', 'Pack i svi povezani kodovi su obrisani.');
+            ->with('success', __('messages.pack_deleted'));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RecipientType;
 use App\Helpers\CodeGenerator;
 use App\Helpers\SendOptionsCheck;
 use App\Http\Requests\StoreCodeRequest;
@@ -61,7 +62,7 @@ class CodeController extends Controller
             'email' => $validated['recipient_email'],
             'amount' => $validated['amount'],
             'date' => $sendDate,
-            'recipient_type' => $validated['recipient_type'],
+            'recipient_type' => RecipientType::from($validated['recipient_type']),
             'code' => $CCode,
             'hashcode' => hash('sha256', $CCode),
             'pack_id' => $validated['pack_id']
@@ -77,7 +78,7 @@ class CodeController extends Controller
 
         return redirect()
             ->route('create.code',['pack' => $validated['pack_id']])
-            ->with('success','Uspesno daodato!!!');
+            ->with('success', __('messages.code_created'));
     }
 
     /**
@@ -122,12 +123,12 @@ class CodeController extends Controller
             'email' => $validated['recipient_email'],
             'amount' => $validated['amount'],
             'date' => $sendDate,
-            'recipient_type' => $validated['recipient_type'],
+            'recipient_type' => RecipientType::from($validated['recipient_type']),
         ]);
 
         return redirect()
             ->route('show.code', ['pack' => $pack])
-            ->with('success', 'Kod je uspešno izmenjen.');
+            ->with('success', __('messages.code_updated'));
     }
 
     /**
