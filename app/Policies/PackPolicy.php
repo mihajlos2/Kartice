@@ -28,7 +28,7 @@ class PackPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user,Pack $pack): bool
+    public function create(User $user, Pack $pack): bool
     {
         return $pack->user->is($user);
     }

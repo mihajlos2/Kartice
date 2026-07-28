@@ -48,7 +48,7 @@ class CodeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCodeRequest $request,Pack $pack)
+    public function store(StoreCodeRequest $request, Pack $pack)
     {
         Gate::authorize('view', $pack);
 
@@ -94,7 +94,7 @@ class CodeController extends Controller
      */
     public function edit(Pack $pack, Code $code)
     {
-        Gate::authorize('view', $code);
+        Gate::authorize('update', [$pack, $code]);
 
         return view('edit_one_code', [
             'pack' => $pack,
@@ -107,7 +107,7 @@ class CodeController extends Controller
      */
     public function update(UpdateCodeRequest $request, Pack $pack, Code $code)
     {
-        Gate::authorize('update',[ $code, $pack]);
+        Gate::authorize('update', [$code, $pack]);
 
         $sendDate = SendOptionsCheck::resolveSendDate(
             $request['send_options'],
@@ -134,7 +134,7 @@ class CodeController extends Controller
      */
     public function destroy(Pack $pack, Code $code)
     {
-        Gate::authorize('delete', $code,$pack);
+        Gate::authorize('delete', [$code, $pack]);
         $code->delete();
 
         return redirect()
