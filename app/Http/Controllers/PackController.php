@@ -39,8 +39,8 @@ class PackController extends Controller
         $validated = $request->validated();
 
         $pack = Auth::user()->pack()->create([
-            'name' => $validated->name,
-            'date' => $validated->date,
+            'name' => $validated['name'],
+            'date' => $validated['date'],
         ]);
 
         return redirect()

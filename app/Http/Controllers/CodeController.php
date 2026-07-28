@@ -139,7 +139,8 @@ class CodeController extends Controller
         $code->delete();
 
         return redirect()
-            ->route('show.code',['pack' => $pack]);
+            ->route('show.code',['pack' => $pack])
+            ->with('success', __('messages.code_delete'));
     }
 
 }
