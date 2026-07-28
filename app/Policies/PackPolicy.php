@@ -46,7 +46,7 @@ class PackPolicy
      */
     public function delete(User $user, Pack $pack): bool
     {
-        return false;
+        return $user->is($pack->user);
     }
 
     /**

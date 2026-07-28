@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePackRequest;
 use App\Models\Pack;
+use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -74,6 +75,7 @@ class PackController extends Controller
      */
     public function destroy(Pack $pack)
     {
+        Gate::authorize('delete', $pack);
         $pack->delete();
 
         return redirect()

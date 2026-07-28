@@ -46,7 +46,7 @@ class CodePolicy
      */
     public function delete(User $user, Code $code): bool
     {
-        return false;
+        return $user->is($code->pack->user);
     }
 
     /**

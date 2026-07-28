@@ -93,9 +93,6 @@ class CodeController extends Controller
     public function edit(Pack $pack, Code $code)
     {
         Gate::authorize('view', $code);
-        if ($code->pack_id !== $pack->id) {
-            abort(404);
-        }
 
         return view('edit_one_code', [
             'pack' => $pack,
@@ -135,6 +132,7 @@ class CodeController extends Controller
      */
     public function destroy(Pack $pack, Code $code)
     {
+        Gate::authorize('delete', $code);
         $code->delete();
 
         return redirect()
