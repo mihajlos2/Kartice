@@ -48,8 +48,10 @@ class CodeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCodeRequest $request)
+    public function store(StoreCodeRequest $request,Pack $pack)
     {
+        Gate::authorize('view', $pack);
+
         $CCode = CodeGenerator::generate_code();
 
         $sendDate = SendOptionsCheck::resolveSendDate(
@@ -67,7 +69,7 @@ class CodeController extends Controller
             'recipient_type' => RecipientType::from($validated['recipient_type']),
             'code' => $CCode,
             'hashcode' => hash('sha256', $CCode),
-            'pack_id' => $validated['pack_id'],
+            'pack_id' => $pack->id,
         ]);
 
         Auth::user()->notify(new CodeSender($codes));
@@ -78,7 +80,7 @@ class CodeController extends Controller
         }
 
         return redirect()
-            ->route('create.code', ['pack' => $validated['pack_id']])
+            ->route('create.code', ['pack' => $pack->id])
             ->with('success', __('messages.code_created'));
     }
 
@@ -105,7 +107,7 @@ class CodeController extends Controller
      */
     public function update(UpdateCodeRequest $request, Pack $pack, Code $code)
     {
-        Gate::authorize('update', $code);
+        Gate::authorize('update',[ $code, $pack]);
 
         $sendDate = SendOptionsCheck::resolveSendDate(
             $request['send_options'],
@@ -132,7 +134,7 @@ class CodeController extends Controller
      */
     public function destroy(Pack $pack, Code $code)
     {
-        Gate::authorize('delete', $code);
+        Gate::authorize('delete', $code,$pack);
         $code->delete();
 
         return redirect()

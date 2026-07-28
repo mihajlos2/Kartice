@@ -33,7 +33,6 @@ class StoreCodeRequest extends FormRequest
             'recipient_type' => ['required', Rule::enum(RecipientType::class)],
             'send_options' => ['required', Rule::in(['send_at', 'instant', 'no_date'])],
             'send_at' => ['nullable', 'required_if:send_options,send_at', 'date'],
-            'pack_id' => ['required', 'integer', 'exists:packs,id'],
         ];
     }
 }

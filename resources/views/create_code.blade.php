@@ -6,10 +6,7 @@
         <p class="size = 4">{{ session('success') }}</p>
     @endif
 
-
-
     <form action="{{ route('store.code', ['pack' => $pack]) }}" method="POST">
-        <input type="hidden" name="pack_id" value="{{$pack->id}}">
         @csrf
 
         <div>
