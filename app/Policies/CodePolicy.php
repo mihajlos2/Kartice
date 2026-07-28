@@ -37,7 +37,7 @@ class CodePolicy
      */
     public function update(User $user, Code $code): bool
     {
-        return false;
+        return $user->is($code->pack->user);
     }
 
     /**

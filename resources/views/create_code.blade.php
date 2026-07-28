@@ -119,7 +119,7 @@
                     </option>
 
                     <option
-                        value="{{"no date"}}"
+                        value="no_date"
                     >
                         No date
                     </option>

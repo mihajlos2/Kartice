@@ -21,16 +21,4 @@ class Code extends Model
     public function pack(){
         return $this->belongsTo(Pack::class);
     }
-
-    public function generate_code():string
-    {
-        $charset = "{ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789,.=+_-?!@#$%^&*<>;:}";
-        $code = $charset[rand(0,strlen($charset)-1)];
-        for($i = 0;$i<9;$i++) {
-            $code .= $charset[rand(0,strlen($charset)-1)];
-        }
-        return $code;
-    }
-
-
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePackRequest;
 use App\Models\Pack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,16 +34,13 @@ class PackController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePackRequest $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'date'=> ['date'],
-        ]);
+        $validated = $request->validated();
 
         $pack = Auth::user()->pack()->create([
-            'name' => $request->name,
-            'date' => $request->date,
+            'name' => $validated->name,
+            'date' => $validated->date,
         ]);
 
         return redirect()

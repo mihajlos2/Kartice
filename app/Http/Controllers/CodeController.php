@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CodeGenerator;
+use App\Helpers\SendOptionsCheck;
+use App\Http\Requests\StoreCodeRequest;
+use App\Http\Requests\UpdateCodeRequest;
 use App\Models\Code;
 use App\Models\Pack;
 use App\Notifications\CodeSender;
@@ -41,39 +45,22 @@ class CodeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCodeRequest $request)
     {
-        $Code = new Code();
-        $CCode = $Code->generate_code() ?? 'kalak';
+        $CCode = CodeGenerator::generate_code();
 
+        $sendDate = SendOptionsCheck::resolveSendDate(
+            $request['send_options'],
+            $request['send_at'] ?? null
+        );
 
-        if($request['send_options'] === 'send_at')
-        {
-            $sdate = $request['send_at'];
-        }elseif($request['send_options'] === 'instant')
-        {
-            $sdate = now()->addMinutes(5);
-        }else
-        {
-            $sdate = $request['send_options'];
-        }
-
-
-
-        $validated = $request->validate([
-            'recipient_name' => ['required', 'string', 'max:255'],
-            'recipient_email' => ['required', 'string','email', 'max:255'],
-            'amount' => ['required', 'integer', 'max:255'],
-            'recipient_type' => ['required', 'string', 'max:10'],
-            'pack_id' => ['required', 'integer', 'exists:packs,id']
-            ]);
-
+        $validated = $request->validated();
 
         $codes = Code::create([
             'name' => $validated['recipient_name'],
             'email' => $validated['recipient_email'],
             'amount' => $validated['amount'],
-            'date' => $sdate,
+            'date' => $sendDate,
             'recipient_type' => $validated['recipient_type'],
             'code' => $CCode,
             'hashcode' => hash('sha256', $CCode),
@@ -119,41 +106,24 @@ class CodeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,Pack $pack, Code $code,)
+    public function update(UpdateCodeRequest $request,Pack $pack, Code $code,)
     {
-        if ($code->pack_id !== $pack->id) {
-            abort(404);
-        }
+        Gate::authorize('update', $code);
 
+        $sendDate = SendOptionsCheck::resolveSendDate(
+            $request['send_options'],
+            $request['send_at'] ?? null
+        );
 
-        if($request['send_options'] === 'send_at')
-        {
-            $sdate = $request['send_at'] ?? 'no date';
-        }elseif($request['send_options'] === 'instant')
-        {
-            $sdate = now()->addMinutes(5);
-        }else
-        {
-            $sdate = $request['send_options'];
-        }
-
-
-        $validated = $request->validate([
-            'recipient_name' => ['required', 'string', 'max:255'],
-            'recipient_email' => ['required', 'email', 'max:255'],
-            'amount' => ['required', 'integer', 'min:1'],
-            'recipient_type' => ['required', 'string', 'in:specific,bulk'],
-        ]);
+         $validated = $request->validated();
 
          $code->update([
             'name' => $validated['recipient_name'],
             'email' => $validated['recipient_email'],
             'amount' => $validated['amount'],
-            'date' => $sdate,
+            'date' => $sendDate,
             'recipient_type' => $validated['recipient_type'],
         ]);
-
-
 
         return redirect()
             ->route('show.code', ['pack' => $pack])
