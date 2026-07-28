@@ -24,7 +24,8 @@ class SessionsContoller extends Controller
         ]);
 
         if (Auth::attempt($user)) {
-            return redirect('/');
+            return redirect('/')
+                ->with('success', __('messages.login'));
         }
 
         return back()->withErrors([
@@ -36,6 +37,7 @@ class SessionsContoller extends Controller
     {
         Auth::logout();
 
-        return redirect('/');
+        return redirect('/')
+            ->with('success', __('messages.logout'));
     }
 }

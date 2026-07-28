@@ -5,5 +5,8 @@ return [
     'code_created' => 'Kod je uspešno dodat.',
     'code_updated' => 'Kod je uspešno izmenjen.',
     'code_delete' => 'Kod uspesno ovrisan',
+    'register' => 'Uspesno sete dodali nalog',
+    'login' => 'Uspesno loginovanje',
+    'logout' => 'Dovidjenja',
     'pack_deleted' => 'Pack i svi povezani kodovi su obrisani.',
 ];
