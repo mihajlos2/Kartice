@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -24,7 +26,7 @@ class StorePackRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'date'=> ['date'],
+            'date' => ['date'],
         ];
     }
 }

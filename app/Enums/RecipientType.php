@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Enums;
 
-enum RecipientType:string
+enum RecipientType: string
 {
     case BULK = 'bulk';
     case SPECIFIC = 'specific';

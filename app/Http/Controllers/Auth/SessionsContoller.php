@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -17,23 +19,23 @@ class SessionsContoller extends Controller
     public function store(Request $request)
     {
         $user = $request->validate([
-            'email' => ['required', 'string','email', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', Password::default()],
         ]);
 
         if (Auth::attempt($user)) {
             return redirect('/');
-        }else
-        {
-            return back()->withErrors([
-                'email' => __('messages.bad_credentials'),
-            ]);
         }
+
+        return back()->withErrors([
+            'email' => __('messages.bad_credentials'),
+        ]);
     }
 
     public function destroy()
     {
         Auth::logout();
+
         return redirect('/');
     }
 }

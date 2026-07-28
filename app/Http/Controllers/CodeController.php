@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Enums\RecipientType;
@@ -11,7 +13,6 @@ use App\Models\Code;
 use App\Models\Pack;
 use App\Notifications\CodeSender;
 use App\Notifications\CodeSenderUser;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Notification;
@@ -38,7 +39,8 @@ class CodeController extends Controller
     public function create(Pack $pack)
     {
         Gate::authorize('view', $pack);
-        return view('create_code',[
+
+        return view('create_code', [
             'pack' => $pack,
         ]);
     }
@@ -65,29 +67,25 @@ class CodeController extends Controller
             'recipient_type' => RecipientType::from($validated['recipient_type']),
             'code' => $CCode,
             'hashcode' => hash('sha256', $CCode),
-            'pack_id' => $validated['pack_id']
+            'pack_id' => $validated['pack_id'],
         ]);
 
         Auth::user()->notify(new CodeSender($codes));
 
-        if($request['send_options'] === 'instant')
-        {
+        if ($request['send_options'] === 'instant') {
             Notification::route('mail', $codes->email)
                 ->notify(new CodeSenderUser($codes));
         }
 
         return redirect()
-            ->route('create.code',['pack' => $validated['pack_id']])
+            ->route('create.code', ['pack' => $validated['pack_id']])
             ->with('success', __('messages.code_created'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Pack $pack, Code $code)
-    {
-
-    }
+    public function show(Pack $pack, Code $code) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -104,10 +102,11 @@ class CodeController extends Controller
             'code' => $code,
         ]);
     }
+
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCodeRequest $request,Pack $pack, Code $code,)
+    public function update(UpdateCodeRequest $request, Pack $pack, Code $code)
     {
         Gate::authorize('update', $code);
 
@@ -116,9 +115,9 @@ class CodeController extends Controller
             $request['send_at'] ?? null
         );
 
-         $validated = $request->validated();
+        $validated = $request->validated();
 
-         $code->update([
+        $code->update([
             'name' => $validated['recipient_name'],
             'email' => $validated['recipient_email'],
             'amount' => $validated['amount'],
@@ -139,8 +138,7 @@ class CodeController extends Controller
         $code->delete();
 
         return redirect()
-            ->route('show.code',['pack' => $pack])
+            ->route('show.code', ['pack' => $pack])
             ->with('success', __('messages.code_delete'));
     }
-
 }

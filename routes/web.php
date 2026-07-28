@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\SessionsContoller;
 use App\Http\Controllers\CodeController;
@@ -9,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'welcome');
 
 Route::middleware('auth')->group(function () {
-//pack
+    // pack
 
     Route::get('/packs', [PackController::class, 'index'])
         ->name('packs.index');
@@ -23,7 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/packs', [PackController::class, 'store'])
         ->name('packs.store');
 
-//code
+    // code
 
     Route::get('/create_code/{pack}', [CodeController::class, 'create'])
         ->name('create.code');
@@ -44,21 +46,18 @@ Route::middleware('auth')->group(function () {
         ->name('store.code');
 });
 
-
-//auth
+// auth
 Route::middleware('guest')->group(function () {
-    //guest po defaultu vraca na home page
+    // guest po defaultu vraca na home page
 
-    Route::post('/login',[SessionsContoller::class,'store']);
+    Route::post('/login', [SessionsContoller::class, 'store']);
 
-    Route::get('/login',[SessionsContoller::class,'create'])->name('login');
+    Route::get('/login', [SessionsContoller::class, 'create'])->name('login');
     // zbog name('login') ne mora da ima u bootstrap/app definisan $middleware->redirectGuestsTo('/login')!!!
 
-    Route::get('/register',[RegisteredUserController::class,'create']);
+    Route::get('/register', [RegisteredUserController::class, 'create']);
 
-    Route::post('/register',[RegisteredUserController::class,'store']);
+    Route::post('/register', [RegisteredUserController::class, 'store']);
 
 });
-    Route::delete('/logout',[SessionsContoller::class,'destroy'])->middleware('auth');
-
-
+Route::delete('/logout', [SessionsContoller::class, 'destroy'])->middleware('auth');

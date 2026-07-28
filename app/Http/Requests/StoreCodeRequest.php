@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -22,12 +24,12 @@ class StoreCodeRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ([
+        return [
             'recipient_name' => ['required', 'string', 'max:255'],
-            'recipient_email' => ['required', 'string','email', 'max:255'],
+            'recipient_email' => ['required', 'string', 'email', 'max:255'],
             'amount' => ['required', 'integer', 'max:255'],
             'recipient_type' => ['required', 'string', 'in:specific,bulk'],
-            'pack_id' => ['required', 'integer', 'exists:packs,id']
-        ]);
+            'pack_id' => ['required', 'integer', 'exists:packs,id'],
+        ];
     }
 }

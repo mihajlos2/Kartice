@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePackRequest;
 use App\Models\Pack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 
 class PackController extends Controller
 {
@@ -44,21 +45,18 @@ class PackController extends Controller
         ]);
 
         return redirect()
-            ->route('create.code',['pack' => $pack]);
+            ->route('create.code', ['pack' => $pack]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Pack $pack)
-    {
-
-    }
+    public function show(Pack $pack) {}
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Pack $pack)
+    public function edit(Pack $pack): void
     {
         //
     }
@@ -66,7 +64,7 @@ class PackController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pack $pack)
+    public function update(Request $request, Pack $pack): void
     {
         //
     }

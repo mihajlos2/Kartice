@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use App\Models\Code;
@@ -35,12 +37,12 @@ class CodeSender extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = url('/packs/'.$this->code->pack_id . '/codes?');
+        $url = url('/packs/'.$this->code->pack_id.'/codes?');
 
         return (new MailMessage)
-            ->line('Napravio si kod: '. $this->code->name)
-            ->line('Salje se: '. $this->code->date)
-            ->action('Pogledaj kod', $url )
+            ->line('Napravio si kod: '.$this->code->name)
+            ->line('Salje se: '.$this->code->date)
+            ->action('Pogledaj kod', $url)
             ->line('Thank you for using our application!');
     }
 

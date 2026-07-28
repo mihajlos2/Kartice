@@ -1,24 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\RecipientType;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
+use Override;
 
+#[Fillable([
+
+    'pack_id',
+    'name',
+    'email',
+    'amount',
+    'date',
+    'hashcode',
+    'code',
+    'recipient_type',
+])]
 class Code extends Model
 {
-    protected $fillable= [
-
-        'pack_id',
-        'name',
-        'email',
-        'amount',
-        'date',
-        'hashcode',
-        'code',
-        'recipient_type',
-    ];
-
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -26,7 +30,8 @@ class Code extends Model
         ];
     }
 
-    public function pack(){
+    public function pack()
+    {
         return $this->belongsTo(Pack::class);
     }
 }
