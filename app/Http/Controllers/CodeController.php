@@ -103,7 +103,7 @@ class CodeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCodeRequest $request, Pack $pack, Code $code) //CodeEmailScheduler $emailScheduler
+    public function update(UpdateCodeRequest $request, Pack $pack, Code $code,CodeEmailDispatcher $emailDispatcher) //CodeEmailScheduler $emailScheduler
     {
         Gate::authorize('update', [$code, $pack]);
 
@@ -121,6 +121,8 @@ class CodeController extends Controller
             'date' => $sendDate,
             'recipient_type' => RecipientType::from($validated['recipient_type']),
         ]);
+
+        $emailDispatcher->dispatch($code);
 
         /*if($code->wasChanged('date')){
             $emailScheduler->schedule($code);
