@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->integer('amount');
-            $table->dateTime('date');
+            $table->dateTime('date')->nullable();
+            $table->dateTime('queued_at')->nullable();
+            $table->dateTime('sent_at')->nullable();
             $table->string('recipient_type');
             $table->string('code')->unique();
             $table->string('hashcode');

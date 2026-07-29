@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendCodeEmail;
 use App\Enums\RecipientType;
 use App\Helpers\CodeGenerator;
 use App\Helpers\SendOptionsCheck;
@@ -12,10 +13,10 @@ use App\Http\Requests\UpdateCodeRequest;
 use App\Models\Code;
 use App\Models\Pack;
 use App\Notifications\CodeSender;
-use App\Notifications\CodeSenderUser;
+use App\Services\CodeEmailDispatcher;
+use App\Services\CodeEmailScheduler;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Notification;
 
 class CodeController extends Controller
 {
@@ -48,11 +49,11 @@ class CodeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCodeRequest $request, Pack $pack)
+    public function store(StoreCodeRequest $request, Pack $pack,CodeEmailDispatcher $emailDispatcher) //CodeEmailScheduler $emailScheduler
     {
         Gate::authorize('view', $pack);
 
-        $CCode = CodeGenerator::generate_code();
+        $CodeCode = CodeGenerator::generate_code();
 
         $sendDate = SendOptionsCheck::resolveSendDate(
             $request['send_options'],
@@ -61,23 +62,20 @@ class CodeController extends Controller
 
         $validated = $request->validated();
 
-        $codes = Code::create([
+        $code = Code::create([
             'name' => $validated['recipient_name'],
             'email' => $validated['recipient_email'],
             'amount' => $validated['amount'],
             'date' => $sendDate,
             'recipient_type' => RecipientType::from($validated['recipient_type']),
-            'code' => $CCode,
-            'hashcode' => hash('sha256', $CCode),
+            'code' => $CodeCode,
+            'hashcode' => hash('sha256', $CodeCode),
             'pack_id' => $pack->id,
         ]);
 
-        Auth::user()->notify(new CodeSender($codes));
+        Auth::user()->notify(new CodeSender($code));
 
-        if ($request['send_options'] === 'instant') {
-            Notification::route('mail', $codes->email)
-                ->notify(new CodeSenderUser($codes));
-        }
+        $emailDispatcher->dispatch($code);   //$emailScheduler->schedule($code);
 
         return redirect()
             ->route('create.code', ['pack' => $pack->id])
@@ -94,7 +92,7 @@ class CodeController extends Controller
      */
     public function edit(Pack $pack, Code $code)
     {
-        Gate::authorize('update', [$pack, $code]);
+        Gate::authorize('update', [$code,$pack]);
 
         return view('edit_one_code', [
             'pack' => $pack,
@@ -105,7 +103,7 @@ class CodeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCodeRequest $request, Pack $pack, Code $code)
+    public function update(UpdateCodeRequest $request, Pack $pack, Code $code) //CodeEmailScheduler $emailScheduler
     {
         Gate::authorize('update', [$code, $pack]);
 
@@ -123,6 +121,10 @@ class CodeController extends Controller
             'date' => $sendDate,
             'recipient_type' => RecipientType::from($validated['recipient_type']),
         ]);
+
+        /*if($code->wasChanged('date')){
+            $emailScheduler->schedule($code);
+        }*/
 
         return redirect()
             ->route('show.code', ['pack' => $pack])

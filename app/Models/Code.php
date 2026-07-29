@@ -16,6 +16,8 @@ use Override;
     'email',
     'amount',
     'date',
+    'queued_at',
+    'sent_at',
     'hashcode',
     'code',
     'recipient_type',
@@ -26,6 +28,9 @@ class Code extends Model
     protected function casts(): array
     {
         return [
+            'date' => 'datetime',
+            'sent_at' => 'datetime',
+            'queued_at' => 'datetime',
             'recipient_type' => RecipientType::class,
         ];
     }

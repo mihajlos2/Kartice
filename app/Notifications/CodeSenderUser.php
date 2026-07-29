@@ -38,7 +38,8 @@ class CodeSenderUser extends Notification
     {
         return (new MailMessage)
             ->line('Cestitam dobili ste kod')
-            ->line('KOd je:'.'')
+            ->line('Kod je: '.$this->code->code)
+            ->line('Iznos je: '.$this->code->amount)
             ->line('Thank you for using our application!');
     }
 

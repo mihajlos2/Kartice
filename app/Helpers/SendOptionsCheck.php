@@ -8,12 +8,11 @@ use Carbon\Carbon;
 
 class SendOptionsCheck
 {
-    public static function resolveSendDate(string $sendOption, ?string $sendAt = null): Carbon|string|null
-    {
+    public static function resolveSendDate(string $sendOption, ?string $sendAt = null): ?Carbon {
         return match ($sendOption) {
-            'send_at' => $sendAt,
-            'instant' => now()->addMinutes(5),
-            'no_date' => 'no send'
+            'send_at' => $sendAt !== null ? Carbon::parse($sendAt) : null,
+            'instant' => now(),
+            'no_date' => null,
         };
     }
 }

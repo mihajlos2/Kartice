@@ -102,6 +102,7 @@
                 </td>
 
                 <td style="padding: 0; width: 90px;">
+                    @if( $code->sent_at === null)
                     <form
                         method="GET"
                         action="{{ route('edit.code', [
@@ -122,6 +123,18 @@
                             Edit
                         </button>
                     </form>
+                    @else
+                        <button
+                            style="
+                                width: 100%;
+                                padding: 12px;
+                                border: 0;
+                                cursor: pointer;
+                            "
+                        >
+                            Sent
+                        </button>
+                    @endif
                 </td>
 
                 <td style="padding: 0; width: 90px;">

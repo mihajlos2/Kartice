@@ -32,7 +32,7 @@ class UpdateCodeRequest extends FormRequest
             'amount' => ['required', 'integer', 'min:1'],
             'recipient_type' => ['required', Rule::enum(RecipientType::class)],
             'send_options' => ['required', Rule::in(['send_at', 'instant', 'no_date'])],
-            'send_at' => ['nullable', 'required_if:send_options,send_at', 'date'],
+            'send_at' => ['exclude_unless:send_options,send_at', 'required', 'date', 'after:now'],
         ];
     }
 }
