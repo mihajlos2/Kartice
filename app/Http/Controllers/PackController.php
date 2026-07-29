@@ -154,6 +154,4 @@ class PackController extends Controller
             fclose($handle);
         }, 200, $headers);
     }
-
-
 }

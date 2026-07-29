@@ -142,7 +142,7 @@ class CodeController extends Controller
             ->with('success', __('messages.code_delete'));
     }
 
-    public function export(Pack $pack, Code $code):StreamedResponse
+    public function export(Pack $pack, Code $code): StreamedResponse
     {
         Gate::authorize('view', $code);
 
@@ -196,7 +196,7 @@ class CodeController extends Controller
                 ''
             );
 
-        fclose($handle);
+            fclose($handle);
         }, 200, $headers);
     }
 }
