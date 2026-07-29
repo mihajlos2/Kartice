@@ -15,6 +15,8 @@ use App\Notifications\CodeSender;
 use App\Services\CodeEmailDispatcher;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use RuntimeException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CodeController extends Controller
 {
@@ -138,5 +140,63 @@ class CodeController extends Controller
         return redirect()
             ->route('show.code', ['pack' => $pack])
             ->with('success', __('messages.code_delete'));
+    }
+
+    public function export(Pack $pack, Code $code):StreamedResponse
+    {
+        Gate::authorize('view', $code);
+
+        $fileName = 'pack-'.$pack->id.'-code'.$code->id.'.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'"',
+        ];
+
+        return response()->stream(function () use ($code) {
+            $handle = fopen('php://output', 'w');
+
+            if ($handle === false) {
+                throw new RuntimeException('CSV file could not be opened.');
+            }
+
+            fputcsv(
+                $handle,
+                [
+                    'ID',
+                    'Name',
+                    'Email',
+                    'Amount',
+                    'Send Date',
+                    'Recipient Type',
+                    'Code',
+                    'Queued At',
+                    'Sent At',
+                ],
+                ',',
+                '"',
+                ''
+            );
+
+            fputcsv(
+                $handle,
+                [
+                    $code->id,
+                    $code->name,
+                    $code->email,
+                    $code->amount,
+                    $code->date?->format('Y-m-d H:i:s'),
+                    $code->recipient_type->value,
+                    $code->code,
+                    $code->queued_at?->format('Y-m-d H:i:s'),
+                    $code->sent_at?->format('Y-m-d H:i:s'),
+                ],
+                ',',
+                '"',
+                ''
+            );
+
+        fclose($handle);
+        }, 200, $headers);
     }
 }

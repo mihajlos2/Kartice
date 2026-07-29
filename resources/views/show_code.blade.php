@@ -20,6 +20,19 @@
             margin-bottom: 20px;
         "
     >
+        <a
+            href="{{ route('export.pack', ['pack' => $pack]) }}"
+            style="
+                display: inline-block;
+                padding: 10px 16px;
+                color: white;
+                background-color: #157347;
+                text-decoration: none;
+            "
+        >
+            Export Pack
+        </a>
+
         <form
             method="POST"
             action="{{ route('destroy.pack', ['pack' => $pack]) }}"
@@ -70,6 +83,7 @@
             <th style="padding: 10px;">Recipient Type</th>
             <th style="padding: 10px;">Code</th>
             <th style="padding: 10px;">Edit</th>
+            <th style="padding: 10px;">Export</th>
             <th style="padding: 10px;">Delete</th>
         </tr>
         </thead>
@@ -102,34 +116,36 @@
                 </td>
 
                 <td style="padding: 0; width: 90px;">
-                    @if( $code->sent_at === null)
-                    <form
-                        method="GET"
-                        action="{{ route('edit.code', [
-                                    'pack' => $pack,
-                                    'code' => $code
-                                ]) }}"
-                        style="margin: 0;"
-                    >
-                        <button
-                            type="submit"
-                            style="
+                    @if ($code->sent_at === null)
+                        <form
+                            method="GET"
+                            action="{{ route('edit.code', [
+                                'pack' => $pack,
+                                'code' => $code
+                            ]) }}"
+                            style="margin: 0;"
+                        >
+                            <button
+                                type="submit"
+                                style="
                                     width: 100%;
                                     padding: 12px;
                                     border: 0;
                                     cursor: pointer;
                                 "
-                        >
-                            Edit
-                        </button>
-                    </form>
+                            >
+                                Edit
+                            </button>
+                        </form>
                     @else
                         <button
+                            type="button"
+                            disabled
                             style="
                                 width: 100%;
                                 padding: 12px;
                                 border: 0;
-                                cursor: pointer;
+                                cursor: not-allowed;
                             "
                         >
                             Sent
@@ -138,12 +154,33 @@
                 </td>
 
                 <td style="padding: 0; width: 90px;">
+                    <a
+                        href="{{ route('export.code', [
+                            'pack' => $pack,
+                            'code' => $code
+                        ]) }}"
+                        style="
+                            display: block;
+                            width: 100%;
+                            box-sizing: border-box;
+                            padding: 12px;
+                            color: white;
+                            background-color: #157347;
+                            text-align: center;
+                            text-decoration: none;
+                        "
+                    >
+                        Export
+                    </a>
+                </td>
+
+                <td style="padding: 0; width: 90px;">
                     <form
                         method="POST"
                         action="{{ route('destroy.code', [
-                                'pack' => $pack,
-                                'code' => $code
-                            ]) }}"
+                            'pack' => $pack,
+                            'code' => $code
+                        ]) }}"
                         style="margin: 0;"
                     >
                         @csrf
@@ -152,13 +189,13 @@
                         <button
                             type="submit"
                             style="
-                                    width: 100%;
-                                    padding: 12px;
-                                    border: 0;
-                                    color: white;
-                                    background-color: #b42318;
-                                    cursor: pointer;
-                                "
+                                width: 100%;
+                                padding: 12px;
+                                border: 0;
+                                color: white;
+                                background-color: #b42318;
+                                cursor: pointer;
+                            "
                         >
                             Delete
                         </button>
@@ -168,7 +205,7 @@
         @empty
             <tr>
                 <td
-                    colspan="8"
+                    colspan="9"
                     style="padding: 10px; text-align: center;"
                 >
                     This pack does not have any codes.
@@ -177,6 +214,5 @@
         @endforelse
         </tbody>
     </table>
-
 
 </x-layout>

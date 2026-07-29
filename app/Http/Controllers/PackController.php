@@ -9,6 +9,8 @@ use App\Models\Pack;
 use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use RuntimeException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PackController extends Controller
 {
@@ -82,4 +84,76 @@ class PackController extends Controller
             ->route('packs.index')
             ->with('success', __('messages.pack_deleted'));
     }
+
+    public function export(Pack $pack): StreamedResponse
+    {
+        Gate::authorize('view', $pack);
+
+        $fileName = 'pack-'.$pack->id.'.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'"',
+        ];
+
+        return response()->stream(function () use ($pack) {
+            $handle = fopen('php://output', 'w');
+
+            if ($handle === false) {
+                throw new RuntimeException('CSV file could not be opened.');
+            }
+
+            fputcsv(
+                $handle,
+                [
+                    'ID',
+                    'Name',
+                    'Email',
+                    'Amount',
+                    'Send Date',
+                    'Recipient Type',
+                    'Code',
+                    'Queued At',
+                    'Sent At',
+                ],
+                ',',
+                '"',
+                ''
+            );
+
+            $pack->code()
+                ->select([
+                    'id',
+                    'name',
+                    'email',
+                    'amount',
+                    'date',
+                    'recipient_type',
+                    'code',
+                    'queued_at',
+                    'sent_at',
+                ])
+                ->chunkById(500, function ($codes) use ($handle) {
+                    foreach ($codes as $code) {
+                        fputcsv(
+                            $handle,
+                            [
+                                $code->name,
+                                $code->email,
+                                $code->amount,
+                                $code->date?->format('Y-m-d H:i:s'),
+                                $code->recipient_type->value,
+                                $code->code,
+                                $code->queued_at?->format('Y-m-d H:i:s'),
+                                $code->sent_at?->format('Y-m-d H:i:s'),
+                            ]
+                        );
+                    }
+                });
+
+            fclose($handle);
+        }, 200, $headers);
+    }
+
+
 }

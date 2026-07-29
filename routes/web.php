@@ -61,3 +61,11 @@ Route::middleware('guest')->group(function () {
 
 });
 Route::delete('/logout', [SessionsContoller::class, 'destroy'])->middleware('auth');
+
+//export
+
+Route::get('/packs/{pack}/export', [PackController::class, 'export'])
+    ->name('export.pack');
+
+Route::get('/packs/{pack}/codes/{code}/export', [CodeController::class, 'export'])
+    ->name('export.code');
