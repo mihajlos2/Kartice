@@ -19,6 +19,11 @@ class SendCodeEmail implements ShouldQueue
 
     public function __construct(public Code $code) // public CarbonImmutable $scheduledFor
     {
+        //
+    }
+
+    public function middleware(): array
+    {
         return [
             (new RateLimited('mailtrap'))->releaseAfter(11),
         ];
