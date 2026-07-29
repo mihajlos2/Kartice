@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Notification;
 class SendCodeEmail implements ShouldQueue
 {
     use Queueable;
-
+    public int $tries = 10;
+    public int $backoff = 11;
     public bool $deleteWhenMissingModels = true;
 
     public function __construct(public Code $code) // public CarbonImmutable $scheduledFor
