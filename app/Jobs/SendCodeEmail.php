@@ -8,6 +8,7 @@ use App\Models\Code;
 use App\Notifications\CodeSenderUser;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Queue\Middleware\RateLimited;
 use Illuminate\Support\Facades\Notification;
 
 class SendCodeEmail implements ShouldQueue
@@ -18,7 +19,9 @@ class SendCodeEmail implements ShouldQueue
 
     public function __construct(public Code $code) // public CarbonImmutable $scheduledFor
     {
-        //
+        return [
+            (new RateLimited('mailtrap'))->releaseAfter(11),
+        ];
     }
 
     public function handle(): void
