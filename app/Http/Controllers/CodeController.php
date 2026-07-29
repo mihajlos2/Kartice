@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Jobs\SendCodeEmail;
-use App\Enums\RecipientType;
 use App\Helpers\CodeGenerator;
+use App\Helpers\Enums\RecipientType;
 use App\Helpers\SendOptionsCheck;
 use App\Http\Requests\StoreCodeRequest;
 use App\Http\Requests\UpdateCodeRequest;
@@ -14,7 +13,6 @@ use App\Models\Code;
 use App\Models\Pack;
 use App\Notifications\CodeSender;
 use App\Services\CodeEmailDispatcher;
-use App\Services\CodeEmailScheduler;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -49,7 +47,7 @@ class CodeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCodeRequest $request, Pack $pack,CodeEmailDispatcher $emailDispatcher) //CodeEmailScheduler $emailScheduler
+    public function store(StoreCodeRequest $request, Pack $pack, CodeEmailDispatcher $emailDispatcher)
     {
         Gate::authorize('view', $pack);
 
@@ -75,7 +73,7 @@ class CodeController extends Controller
 
         Auth::user()->notify(new CodeSender($code));
 
-        $emailDispatcher->dispatch($code);   //$emailScheduler->schedule($code);
+        $emailDispatcher->dispatch($code);
 
         return redirect()
             ->route('create.code', ['pack' => $pack->id])
@@ -92,7 +90,7 @@ class CodeController extends Controller
      */
     public function edit(Pack $pack, Code $code)
     {
-        Gate::authorize('update', [$code,$pack]);
+        Gate::authorize('update', [$code, $pack]);
 
         return view('edit_one_code', [
             'pack' => $pack,
@@ -103,7 +101,7 @@ class CodeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCodeRequest $request, Pack $pack, Code $code,CodeEmailDispatcher $emailDispatcher) //CodeEmailScheduler $emailScheduler
+    public function update(UpdateCodeRequest $request, Pack $pack, Code $code, CodeEmailDispatcher $emailDispatcher)
     {
         Gate::authorize('update', [$code, $pack]);
 
@@ -123,10 +121,6 @@ class CodeController extends Controller
         ]);
 
         $emailDispatcher->dispatch($code);
-
-        /*if($code->wasChanged('date')){
-            $emailScheduler->schedule($code);
-        }*/
 
         return redirect()
             ->route('show.code', ['pack' => $pack])

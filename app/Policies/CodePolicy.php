@@ -39,10 +39,10 @@ class CodePolicy
      */
     public function update(User $user, Code $code, Pack $pack): bool
     {
-        if($code->sent_at === null)
-        {
+        if ($code->sent_at === null) {
             return $code->pack->is($pack) && $user->is($code->pack->user);
         }
+
         return false;
     }
 

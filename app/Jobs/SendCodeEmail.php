@@ -6,7 +6,6 @@ namespace App\Jobs;
 
 use App\Models\Code;
 use App\Notifications\CodeSenderUser;
-use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Notification;

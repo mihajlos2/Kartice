@@ -33,7 +33,7 @@
             </label>
 
             <select id="recipient_type" name="recipient_type">
-                @foreach (\App\Enums\RecipientType::cases() as $recipientType)
+                @foreach (\App\Helpers\Enums\RecipientType::cases() as $recipientType)
                     <option
                         value="{{ $recipientType->value }}"
                         @selected(

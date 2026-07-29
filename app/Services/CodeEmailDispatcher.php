@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Jobs\SendCodeEmail;
@@ -36,6 +38,7 @@ class CodeEmailDispatcher
             }
 
             SendCodeEmail::dispatch($code)->afterCommit();
+
         });
     }
 }
