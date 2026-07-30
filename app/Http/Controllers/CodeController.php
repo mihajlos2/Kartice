@@ -26,9 +26,9 @@ class CodeController extends Controller
     public function index(Pack $pack)
     {
         Gate::authorize('view', $pack);
-        $codes = $pack->code;
+        $codes = $pack->code()->paginate(10);
 
-        return view('show_code', [
+        return view('codes.index', [
             'codes' => $codes,
             'pack' => $pack,
         ]);
@@ -41,7 +41,7 @@ class CodeController extends Controller
     {
         Gate::authorize('view', $pack);
 
-        return view('create_code', [
+        return view('codes.create', [
             'pack' => $pack,
         ]);
     }
@@ -94,7 +94,7 @@ class CodeController extends Controller
     {
         Gate::authorize('update', [$code, $pack]);
 
-        return view('edit_one_code', [
+        return view('codes.edit', [
             'pack' => $pack,
             'code' => $code,
         ]);

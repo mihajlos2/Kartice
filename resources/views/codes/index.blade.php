@@ -21,7 +21,7 @@
         "
     >
         <a
-            href="{{ route('export.pack', ['pack' => $pack]) }}"
+            href="/"
             style="
                 display: inline-block;
                 padding: 10px 16px;
@@ -30,7 +30,7 @@
                 text-decoration: none;
             "
         >
-            Export Pack
+            Export
         </a>
 
         <form
@@ -83,7 +83,6 @@
             <th style="padding: 10px;">Recipient Type</th>
             <th style="padding: 10px;">Code</th>
             <th style="padding: 10px;">Edit</th>
-            <th style="padding: 10px;">Export</th>
             <th style="padding: 10px;">Delete</th>
         </tr>
         </thead>
@@ -154,27 +153,6 @@
                 </td>
 
                 <td style="padding: 0; width: 90px;">
-                    <a
-                        href="{{ route('export.code', [
-                            'pack' => $pack,
-                            'code' => $code
-                        ]) }}"
-                        style="
-                            display: block;
-                            width: 100%;
-                            box-sizing: border-box;
-                            padding: 12px;
-                            color: white;
-                            background-color: #157347;
-                            text-align: center;
-                            text-decoration: none;
-                        "
-                    >
-                        Export
-                    </a>
-                </td>
-
-                <td style="padding: 0; width: 90px;">
                     <form
                         method="POST"
                         action="{{ route('destroy.code', [
@@ -205,7 +183,7 @@
         @empty
             <tr>
                 <td
-                    colspan="9"
+                    colspan="8"
                     style="padding: 10px; text-align: center;"
                 >
                     This pack does not have any codes.

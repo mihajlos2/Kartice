@@ -21,7 +21,7 @@ class PackController extends Controller
     {
         $packs = Auth::user()->pack;
 
-        return view('show_pack', [
+        return view('packs.index', [
             'packs' => $packs,
         ]);
     }
@@ -32,7 +32,7 @@ class PackController extends Controller
     public function create()
     {
 
-        return view('create_pack');
+        return view('packs.create');
     }
 
     /**

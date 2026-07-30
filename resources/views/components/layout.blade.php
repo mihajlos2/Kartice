@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+
     <title>{{ $title }}</title>
 
     <style>
@@ -39,7 +40,7 @@
             background-color: white;
         }
 
-        nav {
+        .main-navigation  {
             display: flex;
             align-items: center;
             gap: 24px;
@@ -48,7 +49,7 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
-        nav > a {
+        .main-navigation  > a {
             color: white;
             text-decoration: none;
             font-size: 16px;
@@ -58,7 +59,7 @@
             transition: 0.5s;
         }
 
-        nav > a:hover {
+        .main-navigation  > a:hover {
             color: #1c1c1a;
             background-color: white;
         }
@@ -83,7 +84,7 @@
 
 <body>
 
-<nav>
+<nav class="main-navigation">
     <a href="/">Home</a>
     @auth
         <a href="{{ route('packs.create') }}">Create Pack</a>
