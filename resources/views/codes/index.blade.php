@@ -10,7 +10,7 @@
 
     <p>Pack ID: {{ $pack->id }}</p>
     <p>Store Credit Pack: {{ $pack->name }}</p>
-    <p>Count: {{ $codes->count() }}</p>
+    <p>Count: {{ $codes->total() }}</p>
 
     <div
         style="
@@ -21,7 +21,7 @@
         "
     >
         <a
-            href="/"
+            href="{{ route('export.pack', ['pack' => $pack]) }}"
             style="
                 display: inline-block;
                 padding: 10px 16px;
@@ -74,6 +74,10 @@
         border="1"
         style="border-collapse: collapse;"
     >
+        <div class="pagination-wrapper">
+            {{ $codes->links() }}
+        </div>
+
         <thead>
         <tr style="background-color: #eeeeee;">
             <th style="padding: 10px;">Name</th>
@@ -83,6 +87,7 @@
             <th style="padding: 10px;">Recipient Type</th>
             <th style="padding: 10px;">Code</th>
             <th style="padding: 10px;">Edit</th>
+            <th style="padding: 10px;">Export</th>
             <th style="padding: 10px;">Delete</th>
         </tr>
         </thead>
@@ -150,6 +155,26 @@
                             Sent
                         </button>
                     @endif
+                </td>
+
+                <td style="padding: 0; width: 90px;">
+                    <a
+                        href="{{ route('export.code', [
+                            'pack' => $pack,
+                            'code' => $code
+                        ]) }}"
+                        style="
+                            display: block;
+                            width: 100%;
+                            box-sizing: border-box;
+                            padding: 12px;
+                            color: white;
+                            background-color: #157347;
+                            text-align: center;
+                            text-decoration: none;"
+                    >
+                        Export
+                    </a>
                 </td>
 
                 <td style="padding: 0; width: 90px;">
