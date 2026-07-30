@@ -76,6 +76,10 @@
                 </div>
             @endforelse
         </div>
+
+        <div class="pagination-wrapper">
+            {{ $packs->links() }}
+        </div>
     </section>
 
 </x-layout>

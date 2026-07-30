@@ -19,7 +19,7 @@ class PackController extends Controller
      */
     public function index()
     {
-        $packs = Auth::user()->pack;
+        $packs = Auth::user()->pack()->paginate(6);
 
         return view('packs.index', [
             'packs' => $packs,

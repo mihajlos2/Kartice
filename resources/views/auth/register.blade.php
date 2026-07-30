@@ -5,7 +5,7 @@
 
             <h1>Create account</h1>
 
-            <form action="#" method="POST">
+            <form action="{{route('register')}}" method="POST">
                 @csrf
 
                 <div class="form-group">

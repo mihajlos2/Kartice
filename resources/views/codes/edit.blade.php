@@ -147,7 +147,7 @@
             </p>
         </div>
 
-        <button type="submit">
+        <button type="submit" style="background: #157347">
             Save
         </button>
 
@@ -156,9 +156,10 @@
     <form
         action="{{ route('show.code', ['pack' => $pack]) }}"
         method="GET"
-        style="margin-top: 10px;"
+        style="margin-top: 10px;
+        "
     >
-        <button type="submit">Show all Codes</button>
+        <button type="submit" style="background: #4f46e5">Show all Codes</button>
     </form>
 
 </x-layout>
