@@ -44,6 +44,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/create_code/{pack}', [CodeController::class, 'store'])
         ->name('store.code');
+    Route::delete('/packs/{pack}/codes/bulk-delete', [CodeController::class, 'destroySelected'])
+        ->name('codes.bulk-delete');
 });
 
 // auth

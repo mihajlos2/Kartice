@@ -9,4 +9,5 @@ return [
     'login' => 'Uspesno loginovanje',
     'logout' => 'Dovidjenja',
     'pack_deleted' => 'Pack i svi povezani kodovi su obrisani.',
+    'codes_deleted' => 'Izabrani kodovi su uspešno obrisani.',
 ];

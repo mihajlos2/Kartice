@@ -411,6 +411,12 @@ select:focus {
     min-width: 190px;
 }
 
+.bulk-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
 @media (max-width: 700px) {
     .main-navigation {
         flex-wrap: wrap;

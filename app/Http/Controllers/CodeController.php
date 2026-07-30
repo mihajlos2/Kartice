@@ -8,6 +8,7 @@ use App\Filters\CodeFilter;
 use App\Helpers\CodeGenerator;
 use App\Helpers\Enums\RecipientType;
 use App\Helpers\SendOptionsCheck;
+use App\Http\Requests\BulkDeleteCodesRequest;
 use App\Http\Requests\FilterCodesRequest;
 use App\Http\Requests\StoreCodeRequest;
 use App\Http\Requests\UpdateCodeRequest;
@@ -204,5 +205,26 @@ class CodeController extends Controller
 
             fclose($handle);
         }, 200, $headers);
+    }
+
+    public function destroySelected(BulkDeleteCodesRequest $request,Pack $pack)
+    {
+        $validated = $request->validated();
+
+        $codes = $pack->code()
+            ->whereIn('id', $validated['code_ids'])
+            ->get();
+
+        foreach ($codes as $code) {
+            Gate::authorize('delete', [$code, $pack]);
+        }
+
+        foreach ($codes as $code) {
+            $code->delete();
+        }
+
+        return redirect()
+            ->route('show.code', ['pack' => $pack])
+            ->with('success', __('messages.codes_deleted'));
     }
 }

@@ -1,4 +1,5 @@
-﻿<x-layout title="Pack Codes">
+﻿@php use App\Helpers\Enums\RecipientType; @endphp
+<x-layout title="Pack Codes">
 
     <header class="page-header">
         <div>
@@ -61,6 +62,31 @@
             </button>
         </form>
 
+        <form
+            method="POST"
+            class="bulk-actions"
+            action="{{ route('codes.bulk-delete', ['pack' => $pack]) }}"
+            style="margin: 0;"
+        >
+            @csrf
+            @method('DELETE')
+
+            <button
+                type="submit"
+                style="
+                    padding: 10px 16px;
+                    border: 0;
+                    color: white;
+                    background-color: #b42318;
+                    cursor: pointer;
+                "
+            >
+                Delete Codes
+            </button>
+
+            <x-error name="code_ids"/>
+        </form>
+
         <a
             href="{{ route('create.code', ['pack' => $pack]) }}"
             style="
@@ -120,7 +146,7 @@
                     All Recipient Types
                 </option>
 
-                @foreach (\App\Helpers\Enums\RecipientType::cases() as $recipientType)
+                @foreach (RecipientType::cases() as $recipientType)
                     <option
                         value="{{ $recipientType->value }}"
                         @selected(
@@ -169,13 +195,15 @@
             </select>
         </div>
 
-        <button class="btn btn-primary" type="submit">
+        <button class="btn btn-primary" style="float: right" type="submit">
             Apply
         </button>
 
         <a
             class="btn btn-secondary"
             href="{{ route('show.code', ['pack' => $pack]) }}"
+            style="float: right"
+
         >
             Reset
         </a>
@@ -184,6 +212,7 @@
     <table class="codes-table">
         <thead>
         <tr style="background-color: #eeeeee;">
+            <th class="selection-column">Select</th>
             <th style="padding: 10px;">Name</th>
             <th style="padding: 10px;">Email</th>
             <th style="padding: 10px;">Amount</th>
@@ -199,6 +228,16 @@
         <tbody>
         @forelse ($codes as $code)
             <tr>
+
+                <td class="selection-column">
+                    <input
+                        type="checkbox"
+                        name="code_ids[]"
+                        value="{{ $code->id }}"
+                        form="bulk-delete-form"
+                    >
+                </td>
+
                 <td style="padding: 10px;">
                     {{ $code->name }}
                 </td>
@@ -313,7 +352,7 @@
         @empty
             <tr>
                 <td
-                    colspan="9"
+                    colspan="10"
                     style="padding: 10px; text-align: center;"
                 >
                     This pack does not have any codes.
