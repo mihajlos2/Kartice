@@ -1,7 +1,5 @@
 <x-layout title="Register Page">
 
-    <x-rl_style />
-
     <div class="auth-page">
         <div class="auth-card">
 
