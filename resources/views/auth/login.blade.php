@@ -1,13 +1,11 @@
 <x-layout title="Login Page">
 
-    <x-rl_style/>
-
     <div class="auth-page">
         <div class="auth-card">
 
             <h1>Log in</h1>
 
-            <form action="#" method="POST">
+            <form action="{{route('login')}}" method="POST">
                 @csrf
 
                 <div class="form-group">

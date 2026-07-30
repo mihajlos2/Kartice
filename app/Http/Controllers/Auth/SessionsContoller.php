@@ -24,6 +24,8 @@ class SessionsContoller extends Controller
         ]);
 
         if (Auth::attempt($user)) {
+            Auth::user()->refresh();
+
             return redirect('/')
                 ->with('success', __('messages.login'));
         }

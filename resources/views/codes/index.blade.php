@@ -1,17 +1,20 @@
 ﻿<x-layout title="Pack Codes">
 
-    <h1>Pack Codes</h1>
+    <header class="page-header">
+        <div>
+            <h1>Pack Codes</h1>
 
-    @if (session('success'))
-        <p style="color: green;">
-            {{ session('success') }}
-        </p>
-    @endif
+            @if (session('success'))
+                <p style="color: green;">
+                    {{ session('success') }}
+                </p>
+            @endif
 
-    <p>Pack ID: {{ $pack->id }}</p>
-    <p>Store Credit Pack: {{ $pack->name }}</p>
-    <p>Count: {{ $codes->count() }}</p>
-
+            <p>Pack ID: {{ $pack->id }}</p>
+            <p>Store Credit Pack: {{ $pack->name }}</p>
+            <p>Count: {{ $codes->total() }}</p>
+        </div>
+    </header>
     <div
         style="
             display: flex;
@@ -23,14 +26,16 @@
         <a
             href="{{ route('export.pack', ['pack' => $pack]) }}"
             style="
+                border-radius: 8px;
                 display: inline-block;
                 padding: 10px 16px;
                 color: white;
+                cursor: pointer;
                 background-color: #157347;
                 text-decoration: none;
             "
         >
-            Export Pack
+            Export
         </a>
 
         <form
@@ -58,6 +63,7 @@
         <a
             href="{{ route('create.code', ['pack' => $pack]) }}"
             style="
+                border-radius: 8px;
                 display: inline-block;
                 padding: 10px 16px;
                 color: white;
@@ -69,11 +75,7 @@
         </a>
     </div>
 
-    <table
-        width="100%"
-        border="1"
-        style="border-collapse: collapse;"
-    >
+    <table class="codes-table">
         <thead>
         <tr style="background-color: #eeeeee;">
             <th style="padding: 10px;">Name</th>
@@ -160,6 +162,7 @@
                             'code' => $code
                         ]) }}"
                         style="
+                            border-radius: 8px;
                             display: block;
                             width: 100%;
                             box-sizing: border-box;
@@ -167,8 +170,7 @@
                             color: white;
                             background-color: #157347;
                             text-align: center;
-                            text-decoration: none;
-                        "
+                            text-decoration: none;"
                     >
                         Export
                     </a>
@@ -214,5 +216,9 @@
         @endforelse
         </tbody>
     </table>
+
+    <div class="pagination-wrapper">
+        {{ $codes->links() }}
+    </div>
 
 </x-layout>

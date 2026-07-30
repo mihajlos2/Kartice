@@ -19,9 +19,9 @@ class PackController extends Controller
      */
     public function index()
     {
-        $packs = Auth::user()->pack;
+        $packs = Auth::user()->pack()->paginate(6);
 
-        return view('show_pack', [
+        return view('packs.index', [
             'packs' => $packs,
         ]);
     }
@@ -32,7 +32,7 @@ class PackController extends Controller
     public function create()
     {
 
-        return view('create_pack');
+        return view('packs.create');
     }
 
     /**
@@ -145,7 +145,7 @@ class PackController extends Controller
                                 $code->recipient_type->value,
                                 $code->code,
                                 $code->queued_at?->format('Y-m-d H:i:s'),
-                                $code->sent_at?->format('Y-m-d H:i:s'),
+                                $code->sent_at,
                             ]
                         );
                     }

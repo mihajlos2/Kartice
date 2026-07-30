@@ -119,9 +119,9 @@
             </p>
 
             <x-error name="send_at"/>
-        </div>
+        </div >
 
-        <div style="margin-top: 1px">
+        <div style="margin-top: 1px; margin-bottom: 10px">
             <label for="send_options">Send Options</label>
             <p>
                 <select id="send_options" name="send_options">
@@ -147,7 +147,7 @@
             </p>
         </div>
 
-        <button type="submit">
+        <button type="submit" style="background: #157347">
             Save
         </button>
 
@@ -156,9 +156,10 @@
     <form
         action="{{ route('show.code', ['pack' => $pack]) }}"
         method="GET"
-        style="margin-top: 10px;"
+        style="margin-top: 10px;
+        "
     >
-        <button type="submit">Show all Codes</button>
+        <button type="submit" style="background: #4f46e5">Show all Codes</button>
     </form>
 
 </x-layout>

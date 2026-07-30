@@ -1,13 +1,11 @@
 <x-layout title="Register Page">
 
-    <x-rl_style />
-
     <div class="auth-page">
         <div class="auth-card">
 
             <h1>Create account</h1>
 
-            <form action="#" method="POST">
+            <form action="{{route('register')}}" method="POST">
                 @csrf
 
                 <div class="form-group">
