@@ -74,10 +74,6 @@
         border="1"
         style="border-collapse: collapse;"
     >
-        <div class="pagination-wrapper">
-            {{ $codes->links() }}
-        </div>
-
         <thead>
         <tr style="background-color: #eeeeee;">
             <th style="padding: 10px;">Name</th>
@@ -208,7 +204,7 @@
         @empty
             <tr>
                 <td
-                    colspan="8"
+                    colspan="9"
                     style="padding: 10px; text-align: center;"
                 >
                     This pack does not have any codes.
@@ -217,5 +213,9 @@
         @endforelse
         </tbody>
     </table>
+
+    <div class="pagination-wrapper">
+        {{ $codes->links() }}
+    </div>
 
 </x-layout>
