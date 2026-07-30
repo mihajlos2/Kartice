@@ -26,6 +26,7 @@
                 display: inline-block;
                 padding: 10px 16px;
                 color: white;
+                cursor: pointer;
                 background-color: #157347;
                 text-decoration: none;
             "

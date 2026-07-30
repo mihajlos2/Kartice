@@ -119,9 +119,9 @@
             </p>
 
             <x-error name="send_at"/>
-        </div>
+        </div >
 
-        <div style="margin-top: 1px">
+        <div style="margin-top: 1px; margin-bottom: 10px">
             <label for="send_options">Send Options</label>
             <p>
                 <select id="send_options" name="send_options">

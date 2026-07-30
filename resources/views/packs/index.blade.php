@@ -1,52 +1,81 @@
 <x-layout title="Show Packs">
 
-    <h1>All Packs</h1>
+    <section class="page-section">
+        <header class="page-header">
+            <div>
+                <p class="page-eyebrow">Store credits</p>
+                <h1>All Packs</h1>
+                <p class="page-description">
+                    Manage your store credit packs and their codes.
+                </p>
+            </div>
+        </header>
 
-    @if (session('success'))
-        <p>{{ session('success') }}</p>
-    @endif
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-    @forelse ($packs as $pack)
-        <div style="display: flex; gap: 12px; margin-bottom: 10px;">
+        <div class="pack-grid">
+            @forelse ($packs as $pack)
+                <article class="pack-card">
+                    <div class="pack-card-content">
+                        <p class="page-eyebrow">
+                            Pack #{{ $loop->iteration }}
+                        </p>
 
-            <p style="margin: 0; min-width: 150px;">
-                Pack name: {{ $pack->name }}
-            </p>
+                        <h2>{{ $pack->name }}</h2>
 
-            <p style="margin: 0; min-width: 150px;">
-                Default date: {{ $pack->date }}
-            </p>
+                        <p class="pack-date">
+                            Default delivery:
+                            {{ $pack->date ?? 'No default date' }}
+                        </p>
+                    </div>
 
-            <form
-                action="{{ route('create.code', ['pack' => $pack]) }}"
-                method="GET"
-                style="margin: 0;"
-            >
-                <button type="submit">Add</button>
-            </form>
+                    <div class="pack-actions">
+                        <a
+                            class="btn btn-primary"
+                            href="{{ route('show.code', ['pack' => $pack]) }}"
+                        >
+                            View Codes
+                        </a>
 
-            <form
-                action="{{ route('destroy.pack', ['pack' => $pack]) }}"
-                method="POST"
-                style="margin: 0;"
-            >
-            @csrf
-            @method('DELETE')
-                <button type="submit">Delete</button>
-            </form>
+                        <a
+                            class="btn btn-success"
+                            href="{{ route('create.code', ['pack' => $pack]) }}"
+                        >
+                            Add Code
+                        </a>
 
-            <form
-                action="{{ route('show.code', ['pack' => $pack]) }}"
-                method="GET"
-                style="margin: 0;"
-            >
+                        <form
+                            class="inline-form"
+                            action="{{ route('destroy.pack', ['pack' => $pack]) }}"
+                            method="POST"
+                        >
+                            @csrf
+                            @method('DELETE')
 
-                <button type="submit">Show all Codes</button>
-            </form>
+                            <button class="btn btn-danger" type="submit">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </article>
+            @empty
+                <div class="empty-state">
+                    <h2>No packs yet</h2>
 
+                    <p>
+                        Create your first pack to start adding store credit codes.
+                    </p>
+
+                    <a class="btn btn-primary" href="{{ route('packs.create') }}">
+                        Create First Pack
+                    </a>
+                </div>
+            @endforelse
         </div>
-    @empty
-        <p>No packs have been created.</p>
-    @endforelse
+    </section>
 
 </x-layout>
