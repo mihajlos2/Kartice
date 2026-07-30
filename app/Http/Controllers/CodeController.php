@@ -189,7 +189,7 @@ class CodeController extends Controller
                     $code->recipient_type->value,
                     $code->code,
                     $code->queued_at?->format('Y-m-d H:i:s'),
-                    $code->sent_at?->format('Y-m-d H:i:s'),
+                    $code->sent_at,
                 ],
                 ',',
                 '"',
