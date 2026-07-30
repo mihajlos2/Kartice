@@ -15,6 +15,7 @@
             <p>Count: {{ $codes->total() }}</p>
         </div>
     </header>
+
     <div
         style="
             display: flex;
@@ -74,6 +75,111 @@
             Add Code
         </a>
     </div>
+
+    <form
+        class="table-filters"
+        method="GET"
+        action="{{ route('show.code', ['pack' => $pack]) }}"
+    >
+        <div class="filter-group">
+            <label for="status">
+                Delivery Status
+            </label>
+
+            <select id="status" name="status">
+                <option
+                    value="all"
+                    @selected(request('status', 'all') === 'all')
+                >
+                    All Codes
+                </option>
+
+                <option
+                    value="sent"
+                    @selected(request('status') === 'sent')
+                >
+                    Sent Codes
+                </option>
+
+                <option
+                    value="unsent"
+                    @selected(request('status') === 'unsent')
+                >
+                    Unsent Codes
+                </option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="recipient_type">
+                Recipient Type
+            </label>
+
+            <select id="recipient_type" name="recipient_type">
+                <option value="">
+                    All Recipient Types
+                </option>
+
+                @foreach (\App\Helpers\Enums\RecipientType::cases() as $recipientType)
+                    <option
+                        value="{{ $recipientType->value }}"
+                        @selected(
+                            request('recipient_type') === $recipientType->value
+                        )
+                    >
+                        {{ $recipientType->label() }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="order">
+                Order
+            </label>
+
+            <select id="order" name="order">
+                <option
+                    value="date_desc"
+                    @selected(request('order', 'date_desc') === 'date_desc')
+                >
+                    Date – Descending
+                </option>
+
+                <option
+                    value="date_asc"
+                    @selected(request('order') === 'date_asc')
+                >
+                    Date – Ascending
+                </option>
+
+                <option
+                    value="amount_desc"
+                    @selected(request('order') === 'amount_desc')
+                >
+                    Amount – Highest First
+                </option>
+
+                <option
+                    value="amount_asc"
+                    @selected(request('order') === 'amount_asc')
+                >
+                    Amount – Lowest First
+                </option>
+            </select>
+        </div>
+
+        <button class="btn btn-primary" type="submit">
+            Apply
+        </button>
+
+        <a
+            class="btn btn-secondary"
+            href="{{ route('show.code', ['pack' => $pack]) }}"
+        >
+            Reset
+        </a>
+    </form>
 
     <table class="codes-table">
         <thead>

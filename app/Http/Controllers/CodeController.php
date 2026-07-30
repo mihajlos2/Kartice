@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Filters\CodeFilter;
 use App\Helpers\CodeGenerator;
 use App\Helpers\Enums\RecipientType;
 use App\Helpers\SendOptionsCheck;
+use App\Http\Requests\FilterCodesRequest;
 use App\Http\Requests\StoreCodeRequest;
 use App\Http\Requests\UpdateCodeRequest;
 use App\Models\Code;
@@ -23,10 +25,14 @@ class CodeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Pack $pack)
+    public function index(FilterCodesRequest $request, Pack $pack, CodeFilter $codeFilter)
     {
         Gate::authorize('view', $pack);
-        $codes = $pack->code()->paginate(10);
+
+        $codes = $codeFilter
+            ->apply($pack->code()->getQuery(), $request->validated())
+            ->paginate(10)
+            ->withQueryString();
 
         return view('codes.index', [
             'codes' => $codes,
