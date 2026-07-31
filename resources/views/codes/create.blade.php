@@ -120,7 +120,7 @@
             </p>
         </div>
 
-        <button type="submit">Save</button>
+        <button type="submit" style="margin-top: 20px">Save</button>
     </form>
     <form
         action="{{ route('show.code', ['pack' => $pack]) }}"

@@ -207,7 +207,7 @@ class CodeController extends Controller
         }, 200, $headers);
     }
 
-    public function destroySelected(BulkDeleteCodesRequest $request,Pack $pack)
+    public function destroySelected(BulkDeleteCodesRequest $request, Pack $pack)
     {
         $validated = $request->validated();
 

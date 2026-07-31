@@ -63,6 +63,7 @@
         </form>
 
         <form
+            id="bulk-delete-form"
             method="POST"
             class="bulk-actions"
             action="{{ route('codes.bulk-delete', ['pack' => $pack]) }}"
