@@ -383,6 +383,40 @@ select:focus {
     background-color: #f9fafb;
 }
 
+
+.table-filters {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.filter-group {
+    display: grid;
+    gap: 6px;
+}
+
+.filter-group label {
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.filter-group select {
+    min-width: 190px;
+}
+
+.bulk-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
 @media (max-width: 700px) {
     .main-navigation {
         flex-wrap: wrap;
@@ -422,6 +456,16 @@ select:focus {
     .pack-actions .btn,
     .pack-actions .inline-form,
     .pack-actions .inline-form .btn {
+        width: 100%;
+    }
+
+    .table-filters {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .filter-group select,
+    .table-filters .btn {
         width: 100%;
     }
 }

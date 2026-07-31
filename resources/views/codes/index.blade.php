@@ -1,4 +1,5 @@
-﻿<x-layout title="Pack Codes">
+﻿@php use App\Helpers\Enums\RecipientType; @endphp
+<x-layout title="Pack Codes">
 
     <header class="page-header">
         <div>
@@ -15,6 +16,7 @@
             <p>Count: {{ $codes->total() }}</p>
         </div>
     </header>
+
     <div
         style="
             display: flex;
@@ -60,6 +62,32 @@
             </button>
         </form>
 
+        <form
+            id="bulk-delete-form"
+            method="POST"
+            class="bulk-actions"
+            action="{{ route('codes.bulk-delete', ['pack' => $pack]) }}"
+            style="margin: 0;"
+        >
+            @csrf
+            @method('DELETE')
+
+            <button
+                type="submit"
+                style="
+                    padding: 10px 16px;
+                    border: 0;
+                    color: white;
+                    background-color: #b42318;
+                    cursor: pointer;
+                "
+            >
+                Delete Codes
+            </button>
+
+            <x-error name="code_ids"/>
+        </form>
+
         <a
             href="{{ route('create.code', ['pack' => $pack]) }}"
             style="
@@ -75,9 +103,117 @@
         </a>
     </div>
 
+    <form
+        class="table-filters"
+        method="GET"
+        action="{{ route('show.code', ['pack' => $pack]) }}"
+    >
+        <div class="filter-group">
+            <label for="status">
+                Delivery Status
+            </label>
+
+            <select id="status" name="status">
+                <option
+                    value="all"
+                    @selected(request('status', 'all') === 'all')
+                >
+                    All Codes
+                </option>
+
+                <option
+                    value="sent"
+                    @selected(request('status') === 'sent')
+                >
+                    Sent Codes
+                </option>
+
+                <option
+                    value="unsent"
+                    @selected(request('status') === 'unsent')
+                >
+                    Unsent Codes
+                </option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="recipient_type">
+                Recipient Type
+            </label>
+
+            <select id="recipient_type" name="recipient_type">
+                <option value="">
+                    All Recipient Types
+                </option>
+
+                @foreach (RecipientType::cases() as $recipientType)
+                    <option
+                        value="{{ $recipientType->value }}"
+                        @selected(
+                            request('recipient_type') === $recipientType->value
+                        )
+                    >
+                        {{ $recipientType->label() }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="order">
+                Order
+            </label>
+
+            <select id="order" name="order">
+                <option
+                    value="date_desc"
+                    @selected(request('order', 'date_desc') === 'date_desc')
+                >
+                    Date – Descending
+                </option>
+
+                <option
+                    value="date_asc"
+                    @selected(request('order') === 'date_asc')
+                >
+                    Date – Ascending
+                </option>
+
+                <option
+                    value="amount_desc"
+                    @selected(request('order') === 'amount_desc')
+                >
+                    Amount – Highest First
+                </option>
+
+                <option
+                    value="amount_asc"
+                    @selected(request('order') === 'amount_asc')
+                >
+                    Amount – Lowest First
+                </option>
+            </select>
+        </div>
+
+        <button class="btn btn-primary" style="float: right" type="submit">
+            Apply
+        </button>
+
+        <a
+            class="btn btn-secondary"
+            href="{{ route('show.code', ['pack' => $pack]) }}"
+            style="float: right"
+
+        >
+            Reset
+        </a>
+    </form>
+
     <table class="codes-table">
         <thead>
         <tr style="background-color: #eeeeee;">
+            <th class="selection-column">Select</th>
             <th style="padding: 10px;">Name</th>
             <th style="padding: 10px;">Email</th>
             <th style="padding: 10px;">Amount</th>
@@ -93,6 +229,16 @@
         <tbody>
         @forelse ($codes as $code)
             <tr>
+
+                <td class="selection-column">
+                    <input
+                        type="checkbox"
+                        name="code_ids[]"
+                        value="{{ $code->id }}"
+                        form="bulk-delete-form"
+                    >
+                </td>
+
                 <td style="padding: 10px;">
                     {{ $code->name }}
                 </td>
@@ -207,7 +353,7 @@
         @empty
             <tr>
                 <td
-                    colspan="9"
+                    colspan="10"
                     style="padding: 10px; text-align: center;"
                 >
                     This pack does not have any codes.
