@@ -29,7 +29,7 @@ class StoreCodeRequest extends FormRequest
         return [
             'recipient_name' => ['required', 'string', 'max:255'],
             'recipient_email' => ['required', 'string', 'email', 'max:255'],
-            'amount' => ['required', 'integer', 'max:255'],
+            'amount' => ['required', 'integer', 'min:1', 'max:255'],
             'recipient_type' => ['required', Rule::enum(RecipientType::class)],
             'send_options' => ['required', Rule::in(['send_at', 'instant', 'no_date'])],
             'send_at' => ['exclude_unless:send_options,send_at', 'required', 'date', 'after:now'],
