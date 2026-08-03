@@ -1,3 +1,9 @@
+@props([
+    'title',
+    'fullWidth' => false,
+    'overlayNavigation' => false,
+])
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,7 +17,7 @@
 
 <body>
 
-<nav class="main-navigation">
+<nav @class(['main-navigation', 'main-navigation-overlay' => $overlayNavigation])>
     <a href="/">Home</a>
 
     @auth
@@ -38,7 +44,7 @@
     @endguest
 </nav>
 
-<main class="page-content">
+<main @class(['page-content', 'page-content-full' => $fullWidth])>
     {{ $slot }}
 </main>
 
