@@ -105,6 +105,49 @@
 
     <form
         class="table-filters"
+        method="POST"
+        action="{{ route('codes.import', ['pack' => $pack]) }}"
+        enctype="multipart/form-data"
+    >
+        @csrf
+
+        <div class="filter-group code-import-file-group">
+            <label for="csv_file">Import codes from CSV</label>
+
+            <input
+                id="csv_file"
+                name="csv_file"
+                type="file"
+                accept=".csv,text/csv"
+                required
+            >
+
+            <x-error name="csv_file"/>
+        </div>
+
+        <button class="btn btn-success code-import-submit" type="submit">
+            Queue Import
+        </button>
+    </form>
+
+    @if (session()->has('code_import_id'))
+        <div
+            class="alert alert-info code-import-status"
+            data-code-import-status
+            data-status-url="{{ route('codes.import.status', [
+                'pack' => $pack,
+                'importId' => session('code_import_id'),
+            ]) }}"
+            data-failure-message="{{ __('messages.code_import_status_unavailable') }}"
+            role="status"
+            aria-live="polite"
+        >
+            {{ __('messages.code_import_processing') }}
+        </div>
+    @endif
+
+    <form
+        class="table-filters"
         method="GET"
         action="{{ route('show.code', ['pack' => $pack]) }}"
     >

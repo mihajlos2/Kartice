@@ -299,6 +299,22 @@ select:focus {
     color: #166534;
 }
 
+.alert-info {
+    border: 1px solid #bfdbfe;
+    background-color: #eff6ff;
+    color: #1e40af;
+}
+
+.alert-error {
+    border: 1px solid #fecaca;
+    background-color: #fef2f2;
+    color: #991b1b;
+}
+
+.code-import-status {
+    margin-bottom: 20px;
+}
+
 .pack-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -411,6 +427,23 @@ select:focus {
     min-width: 190px;
 }
 
+.code-import-file-group {
+    width: 360px;
+    max-width: 100%;
+}
+
+.code-import-file-group input[type='file'] {
+    width: 100%;
+    height: 52px;
+    padding-block: 8px;
+}
+
+.code-import-submit {
+    align-self: flex-start;
+    height: 52px;
+    margin-top: 26px;
+}
+
 .bulk-actions {
     display: flex;
     justify-content: flex-end;
@@ -466,6 +499,15 @@ select:focus {
 
     .filter-group select,
     .table-filters .btn {
+        width: 100%;
+    }
+
+    .code-import-submit {
+        align-self: stretch;
+        margin-top: 0;
+    }
+
+    .code-import-file-group {
         width: 100%;
     }
 }

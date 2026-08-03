@@ -138,6 +138,7 @@ class PackController extends Controller
                         fputcsv(
                             $handle,
                             [
+                                $code->id,
                                 $code->name,
                                 $code->email,
                                 $code->amount,
@@ -146,7 +147,10 @@ class PackController extends Controller
                                 $code->code,
                                 $code->queued_at?->format('Y-m-d H:i:s'),
                                 $code->sent_at,
-                            ]
+                            ],
+                            ',',
+                            '"',
+                            ''
                         );
                     }
                 });

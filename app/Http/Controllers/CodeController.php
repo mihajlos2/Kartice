@@ -6,20 +6,29 @@ namespace App\Http\Controllers;
 
 use App\Filters\CodeFilter;
 use App\Helpers\CodeGenerator;
+use App\Helpers\CodeImportStatus;
 use App\Helpers\Enums\RecipientType;
 use App\Helpers\SendOptionsCheck;
 use App\Http\Requests\BulkDeleteCodesRequest;
 use App\Http\Requests\FilterCodesRequest;
+use App\Http\Requests\ImportCodesRequest;
 use App\Http\Requests\StoreCodeRequest;
 use App\Http\Requests\UpdateCodeRequest;
+use App\Jobs\ImportCodesFromCsv;
 use App\Models\Code;
 use App\Models\Pack;
 use App\Notifications\CodeSender;
 use App\Services\CodeEmailDispatcher;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Throwable;
 
 class CodeController extends Controller
 {
@@ -87,6 +96,78 @@ class CodeController extends Controller
         return redirect()
             ->route('create.code', ['pack' => $pack->id])
             ->with('success', __('messages.code_created'));
+    }
+
+    public function import(ImportCodesRequest $request, Pack $pack): RedirectResponse
+    {
+        Gate::authorize('view', $pack);
+
+        $csvFile = $request->file('csv_file');
+
+        if (! $csvFile instanceof UploadedFile) {
+            throw new RuntimeException('The validated CSV file is unavailable.');
+        }
+
+        $filePath = $csvFile->store('code-imports', 'local');
+
+        if ($filePath === false) {
+            throw new RuntimeException('The CSV file could not be stored.');
+        }
+
+        $userId = (int) $request->user()->getAuthIdentifier();
+        $importId = (string) Str::uuid();
+
+        try {
+            CodeImportStatus::markQueued($importId, $pack->id, $userId);
+
+            ImportCodesFromCsv::dispatch(
+                $filePath,
+                $pack->id,
+                $userId,
+                $importId,
+            );
+        } catch (Throwable $exception) {
+            CodeImportStatus::forget($importId);
+            Storage::disk('local')->delete($filePath);
+
+            throw $exception;
+        }
+
+        return redirect()
+            ->route('show.code', ['pack' => $pack])
+            ->with([
+                'success' => __('messages.code_import_queued'),
+                'code_import_id' => $importId,
+            ]);
+    }
+
+    public function importStatus(Pack $pack, string $importId): JsonResponse
+    {
+        Gate::authorize('view', $pack);
+
+        $importStatus = CodeImportStatus::find($importId);
+
+        abort_if(
+            $importStatus === null
+            || $importStatus['pack_id'] !== $pack->id
+            || $importStatus['user_id'] !== (int) Auth::id(),
+            404,
+        );
+
+        $message = match ($importStatus['status']) {
+            CodeImportStatus::QUEUED,
+            CodeImportStatus::PROCESSING => __('messages.code_import_processing'),
+            CodeImportStatus::COMPLETED => __('messages.code_import_completed'),
+            CodeImportStatus::FAILED => __('messages.code_import_failed'),
+            default => __('messages.code_import_status_unavailable'),
+        };
+
+        return response()
+            ->json([
+                'status' => $importStatus['status'],
+                'message' => $message,
+            ])
+            ->header('Cache-Control', 'no-store');
     }
 
     /**

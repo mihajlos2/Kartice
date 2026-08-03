@@ -33,6 +33,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/packs/{pack}/codes', [CodeController::class, 'index'])
         ->name('show.code');
 
+    Route::post('/packs/{pack}/codes/import', [CodeController::class, 'import'])
+        ->name('codes.import');
+
+    Route::get('/packs/{pack}/codes/imports/{importId}', [CodeController::class, 'importStatus'])
+        ->whereUuid('importId')
+        ->name('codes.import.status');
+
     Route::get('/packs/{pack}/codes/{code}/edit', [CodeController::class, 'edit'])
         ->name('edit.code');
 
@@ -44,6 +51,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/create_code/{pack}', [CodeController::class, 'store'])
         ->name('store.code');
+
     Route::delete('/packs/{pack}/codes/bulk-delete', [CodeController::class, 'destroySelected'])
         ->name('codes.bulk-delete');
 });
